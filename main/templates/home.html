@@ -1,0 +1,412 @@
+{% load static %}
+{% load widget_tweaks %}
+
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- SEO Meta Tags -->
+    <meta name="description"
+        content="E-Taxi Lille vous assure tout type de transport.
+                 Réserver votre Taxi en quelques cliques ou par téléphone au 06.85.35.74.48
+                 Transport vers gare Lille Flandres, gare Lille Europe et Aéroport ">
+    <meta name="author" content="Yannis Alouache">
+    
+    <meta name="keyword" content="
+        taxi g7,
+	    taxi,	
+	    therapie taxi,	
+	    uber taxi,
+	    g7 taxi,	
+	    taxi conventionné,
+	    taxi bleu,	
+	    alpha taxi,	
+	    taxi g7 contact telephone,	
+	    tarif taxi,	
+	    examen taxi vtc"
+    >
+
+    <!-- OG Meta Tags to improve the way the post looks when you share the page on LinkedIn, Facebook, Google+ -->
+    <meta property="og:site_name" content="E-Taxi Lille" /> <!-- website name -->
+    <meta property="og:site" content="" /> <!-- website link -->
+    <meta property="og:title" content="E-Taxi Lille, Votre Taxi sur Lille pour de meilleur trajet" /> <!-- title shown in the actual shared post -->
+    <meta property="og:description" content="E-Taxi Lille vous assure tout type de transport dans Lille et ses environs.
+                 Réserver votre Taxi en quelques cliques ou par téléphone au 06.85.35.74.48." /> <!-- description shown in the actual shared post -->
+    <meta property="og:image" content="{% static 'main/images/facebook-image.png' %}" /> <!-- image link, make sure it's jpg -->
+    <meta property="og:url" content="" /> <!-- where do you want your post to link to -->
+    <meta property="og:type" content="article" />
+
+    <!-- Website Title -->
+    <title>E-Taxi Lille, Votre Taxi sur Lille pour de meilleur trajet</title>
+
+    <!-- Styles -->
+    <link href="https://fonts.googleapis.com/css?family=Raleway:400,400i,600,700,700i&amp;subset=latin-ext"
+        rel="stylesheet">
+    <link href="{% static "main/css/bootstrap.css" %}" rel="stylesheet">
+    <link href="{% static "main/css/bootstrap-datetimepicker.css" %}" rel="stylesheet">
+    <link href="{% static "main/css/fontawesome-all.css" %}" rel="stylesheet">
+    <link href="{% static "main/css/magnific-popup.css" %}" rel="stylesheet">
+    <link href="{% static "main/css/styles.css" %}" rel="stylesheet">
+
+    <!-- Favicon  -->
+    <link rel="icon" href="{% static "main/images/favicon-16x16.png" %}">
+</head>
+
+<body data-spy="scroll" data-target=".fixed-top">
+
+    <!-- Preloader -->
+    <div class="spinner-wrapper">
+        <div class="spinner">
+            <div class="bounce1"></div>
+            <div class="bounce2"></div>
+            <div class="bounce3"></div>
+        </div>
+    </div>
+    <!-- end of preloader -->
+
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom fixed-top">
+        <!-- Text Logo - Use this if you don't have a graphic logo -->
+        <!-- <a class="navbar-brand logo-text page-scroll" href="index.html">Evolo</a> -->
+
+        <!-- Image Logo -->
+        <a class="navbar-brand logo-image" href="{% url 'home' %}"><img src="{% static "main/images/logo.png" %}" class="width-auto"
+                alt="alternative"></a>
+
+    </nav> <!-- end of navbar -->
+    <!-- end of navigation -->
+
+
+    <!-- Header -->
+    <header id="header" class="header">
+        <div class="header-content">
+            <div class="row justify-content-around margin-rl-100">
+                <div class="col-lg-6">
+                    <div class="image-container">
+                        <img class="img-fluid car-img" src="{% static "main/images/car.png" %}" alt="alternative">
+                    </div> <!-- end of image-container -->
+                </div> <!-- end of col -->
+                <div class="col-lg-4 ">
+                    <div class="text-container">
+                        <h1>Réservez votre Taxi à Lille</h1>
+
+                        <form method ="POST" autocomplete="off">
+                        {% csrf_token %}
+
+                        {% if form.errors %}
+                            {% for field in form %}
+                                {% for error in field.errors %}
+                                    <div class="alert alert-danger text-center">
+                                        <strong>{{ error|escape }}</strong>
+                                    </div>
+                                {% endfor %}
+                            {% endfor %}
+
+                            {% for error in form.non_field_errors %}
+                                <div class="alert alert-danger text-center">
+                                    <strong>{{ error|escape }}</strong>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+
+                        {% if messages %}
+                                {% for message in messages %}
+                                    <div class="alert alert-success text-center">
+                                        <strong>{{ message|escape }}</strong>
+                                    </div>
+                                {% endfor %}
+                        {% endif %}
+
+                        <div class="input-container">
+                            <i class="fa fa-user icon input-icon" data-id="0"></i>
+                            {% render_field form.name class+="form-control large-input my-input input-focus" placeholder="Prénom et Nom" data-id="0"  %}
+                        </div>
+                        <div class="input-container">
+                            <i class="fas fa-phone icon input-icon" id="tel-number-icon" data-id="1"></i>
+                            {% render_field form.phone type="tel" id="tel-number" onkeyup="phoneValidation()" class+="form-control large-input my-input input-focus" placeholder="Téléphone" data-id="1"  %}
+                        </div>
+                        <div class="input-container">
+                            <i class="fas fa-calendar-alt icon input-icon" data-id="2"></i>
+                            {% render_field form.date|append_attr:"readonly:readonly" id="datetimepicker" class+="form-control large-input my-input input-focus" placeholder="Date" data-id="2" %}
+                        </div>
+                        <div class="input-container">
+                            <i class="fa fa-map-marker-alt icon input-icon" data-id="3"></i>
+                            {% render_field form.addressDeparture id="departureAddress" class+="form-control large-input my-input input-focus" placeholder="Adresse de Départ" data-id="3"  %}
+                        </div>
+                        <div class="input-container">
+                            <i class="fa fa-map-marker-alt icon input-icon" data-id="4"></i>
+                            {% render_field form.addressArrival id="arrivalAddress" class+="form-control large-input my-input input-focus" placeholder="Adresse Arrivé" data-id="4"  %}
+                        </div>
+
+                        <button class="btn btn-info btn-block" type="submit">Reserver</button>
+                        </form>
+                        <small class="form-text text-muted">Vous recevrez un appel de confirmation</small>
+
+            
+                    </div> <!-- end of text-container -->
+                </div> <!-- end of col -->
+            </div> <!-- end of row -->
+        </div> <!-- end of header-content -->
+    </header> <!-- end of header -->
+    <!-- end of header -->
+
+
+    <!-- Services -->
+    <div id="services" class="cards-1">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h2 class="service-title">Nous sommes toujours là à votre service</h2>
+                    <p class="p-heading p-large">Nous vous proposons de nombreux services de qualités, adaptés à vos
+                        besoins.</p>
+                </div> <!-- end of col -->
+            </div> <!-- end of row -->
+            <div class="row">
+                <div class="col-lg-12">
+
+                    <!-- Card -->
+                    <div class="card">
+                        <img class="card-image" src="{% static "main/images/services-icon-1.svg" %}" alt="alternative">
+                        <div class="card-body">
+                            <h4 class="card-title">Réservation si facile</h4>
+                            <p class="justify">En ligne, réservez facilement en quelques clics, votre chauffeur de taxi
+                                pour l’ensemble de vos trajets à Lille et alentours. Notre spécialité est le transferts
+                                aéroport et gares, mais aussi les trajets courts et longues distances avec un service
+                                haut de
+                                gamme. </p>
+                        </div>
+                    </div>
+                    <!-- end of card -->
+
+                    <!-- Card -->
+                    <div class="card">
+                        <img class="card-image" src="{% static "main/images/services-icon-2.svg" %}" alt="alternative">
+                        <div class="card-body">
+                            <h4 class="card-title">De nombreuses destinations</h4>
+                            <p class="justify">Nous proposons des déplacements sur diverses destinations, sur
+                                réservation ou sur simple appel de votre part.</p>
+                        </div>
+                    </div>
+                    <!-- end of card -->
+
+                    <!-- Card -->
+                    <div class="card">
+                        <img class="card-image" src="{% static "main/images/services-icon-3.svg" %}" alt="alternative">
+                        <div class="card-body">
+                            <h4 class="card-title">Un service de qualité</h4>
+                            <p class="justify">Que vous organisiez un séjour touristique, un groupe événementiel ou
+                                encore un voyage d’affaires, Nous sommes à votre disposition et vous aidons à organiser
+                                vos transports en mettant à votre disposition un service de grande qualité.</p>
+                        </div>
+                    </div>
+                    <!-- end of card -->
+
+                </div> <!-- end of col -->
+            </div> <!-- end of row -->
+        </div> <!-- end of container -->
+    </div> <!-- end of cards-1 -->
+    <!-- end of services -->
+
+    <br>
+    <br>
+    <br>
+
+    <div class="phone-banner">
+        <div class="container">
+            <h2>Réservez votre taxi par téléphone</h2>
+            <h1>06.85.35.74.48</h2>
+
+        </div> <!-- end of container -->
+    </div> <!-- end of slider-2 -->
+    <!-- end of testimonials -->
+
+    <section class="why-us why-us-container">
+		<div class="container">
+	        <div class="row">
+				<div class="col-md-8 offset-md-2">
+					<h2 class="mt-5 text-center">Pourquoi nous choisir ?</h2>
+					<p class="mb-5 text-center"></p>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-sm-12 col-lg-4">
+					<div class="box">
+						<span>01</span>
+						<h4>Sécurité avant tout</h4>
+						<p>Nous sommes formés à une conduite éthique, respectant l’environnement et le bien-être du passager. Voyagez en toute sérénité avec E-Taxi Lille !</p>
+					</div>
+				</div>
+
+				<div class="col-sm-12 col-lg-4">
+					<div class="box">
+						<span>02</span>
+						<h4>Véhicule Écologique</h4>
+						<p>Nos véhicules sont des véhicules hybrides réduisant les émissions de gaz carbonique.
+                            Chez E-Taxi Lille, nous respectons l’environnement !</p>
+					</div>
+				</div>
+
+				<div class="col-sm-12 col-lg-4">
+					<div class="box">
+						<span>03</span>
+						<h4>De nombreuses destinations</h4>
+						<p>Un taxi pour Lille, Arras ou encore Paris, Charleroi, Liège ? Vous souhaitez vous rendre aux Pays-Bas, au Luxembourg ou en Belgique ?</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+
+    <!-- Footer -->
+    <div class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="footer-col text-center">
+                        <h4>A propos de E-Taxi</h4>
+                        <p>Nous somme une entreprise de chauffeur de taxi qui a pour but d'offrir les meilleurs services possible à ses clients.</p>
+                    </div>
+                </div> <!-- end of col -->
+            </div> <!-- end of row -->
+        </div> <!-- end of container -->
+    </div> <!-- end of footer -->
+    <!-- end of footer -->
+
+
+    <!-- Copyright -->
+    <div class="copyright">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <p class="p-small">Copyright © 2020 <a href="#">E-Taxi</a> - All rights
+                        reserved</p>
+                </div> <!-- end of col -->
+            </div> <!-- enf of row -->
+        </div> <!-- end of container -->
+    </div> <!-- end of copyright -->
+    <!-- end of copyright -->
+
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/places.js@1.19.0"></script>
+    <script src="{% static "main/js/jquery.min.js" %}"></script> <!-- jQuery for Bootstrap's JavaScript plugins -->
+    <script src="{% static "main/js/moment.js" %}"></script> <!-- time scripts -->
+    <script src="{% static "main/js/bootstrap.min.js" %}"></script> <!-- Bootstrap framework -->
+    <script src="{% static "main/js/bootstrap-datetimepicker.js" %}"></script>
+    <script src="{% static "main/js/popper.min.js" %}"></script> <!-- Popper tooltip library for Bootstrap -->
+    <script src="{% static "main/js/jquery.easing.min.js" %}"></script> <!-- jQuery Easing for smooth scrolling between anchors -->
+    <script src="{% static "main/js/jquery.magnific-popup.js" %}"></script> <!-- Magnific Popup for lightboxes -->
+    <script src="{% static "main/js/validator.min.js" %}"></script> <!-- Validator.js - Bootstrap plugin that validates forms -->
+    <script src="{% static "main/js/scripts.js" %}"></script> <!-- Custom scripts -->
+    <script src="{% static "main/js/main.js" %}"></script> <!-- Custom scripts -->
+    <script src="{% static "main/js/moment.js" %}"></script> <!-- time scripts -->
+
+    <script>
+        // Create today Date
+        let today = new Date();
+        let dd = String(today.getDate()).padStart(2, '0');
+        let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+        let yyyy = today.getFullYear();
+        let hh = today.getHours();
+        let minute = today.getMinutes();
+        let dateSelected = document.getElementsByClassName("day active").value;
+
+        console.log(dateSelected)
+
+        today = yyyy + '-' + mm + '-' + dd;
+
+        let i;
+
+        // Initialize french date
+        $.fn.datetimepicker.dates["fr"] = {
+            days: ["Dimanche", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"],
+            daysShort: ["Dim", "Lun", "Mar", "Mer", "Jeu", "Ven", "Sam", "Dim"],
+            daysMin: ["Di", "Lu", "Ma", "Me", "Je", "Ve", "Sa", "Di"],
+            months: ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre",
+                "Octobre", "Novembre", "Décembre"
+            ],
+            monthsShort: ["Jan", "Fev", "Mar", "Avr", "Mai", "Jui", "Jul", "Aou", "Sep", "Oct", "Nov", "Dec"],
+            today: "Aujourd'hui",
+            suffix: [],
+            meridiem: ["am", "pm"],
+            weekStart: 1,
+            format: "dd/mm/yyyy hh:ii",
+        };
+
+
+        // Set dateTimePicker Option
+        $('#datetimepicker').datetimepicker({   
+            format: 'dd/mm/yyyy hh:ii',
+            autoclose: true,
+            language: "fr",
+        });
+
+        // Set a date u cant go below (today)
+        $('#datetimepicker').datetimepicker('setStartDate', today)
+        
+        
+    </script>
+
+    <script>
+        var departureAutocomplete = places({
+            appId: 'plJT7WB62NFL',
+            apiKey: '2797a297b985226d7a0c8aaf16f0c451',
+            container: document.getElementById("departureAddress"), 
+        });
+
+        var arrivalAutocomplete = places({
+            appId: 'plJT7WB62NFL',
+            apiKey: '2797a297b985226d7a0c8aaf16f0c451',
+            container: document.getElementById("arrivalAddress"),
+        });
+
+        departureAutocomplete.configure({
+            countries: ['fr'],
+            type: 'address',
+            aroundLatLngViaIP: true
+        })
+
+        arrivalAutocomplete.configure({
+            countries: ['fr'],
+            type: 'address',
+            aroundLatLngViaIP: true
+        })
+
+    </script>
+
+    <script>
+        function phoneValidation(){
+            const phoneInput = document.getElementById("tel-number");
+            const phoneInputIcon = document.getElementById("tel-number-icon");
+            let phoneInputValue = phoneInput.value;
+            let phonePattern = /^(?:(?:\+|00)33[\s.-]{0,3}(?:\(0\)[\s.-]{0,3})?|0)[1-9](?:(?:[\s.-]?\d{2}){4}|\d{2}(?:[\s.-]?\d{3}){2})$/;
+
+            if(phonePattern.test(phoneInputValue)){
+                phoneInputIcon.classList.add("phone-number-icon-valid")
+                phoneInput.classList.add("phone-number-valid")
+            }
+            else {
+                $("#tel-number").removeClass("input-focus");
+                $("#tel-number").removeClass("phone-number-valid");
+                $(".input-icon").removeClass("phone-number-icon-focus");
+                $(".input-icon").removeClass("phone-number-icon-valid");
+
+                phoneInput.classList.add("phone-number-invalid");
+                phoneInputIcon.classList.add("phone-number-icon-invalid");
+            }
+        }
+    </script>
+    
+     
+
+
+</body>
+
+</html>

@@ -1,0 +1,84 @@
+{% load static %}
+{% load widget_tweaks %}
+
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <meta name="author" content="Yannis Alouache">
+
+    <!-- Website Title -->
+    <title>Race View</title>
+
+    <!-- Styles -->
+    <link href="https://fonts.googleapis.com/css?family=Raleway:400,400i,600,700,700i&amp;subset=latin-ext"
+        rel="stylesheet">
+    <link href="{% static "main/css/bootstrap.css" %}" rel="stylesheet">
+    <link href="{% static "main/css/bootstrap-datetimepicker.css" %}" rel="stylesheet">
+    <link href="{% static "main/css/fontawesome-all.css" %}" rel="stylesheet">
+    <link href="{% static "main/css/magnific-popup.css" %}" rel="stylesheet">
+    <link href="{% static "main/css/styles.css" %}" rel="stylesheet">
+
+    <!-- Favicon  -->
+    <link rel="icon" href="{% static "main/images/favicon-16x16.png" %}">
+</head>
+
+<body data-spy="scroll" data-target=".fixed-top">
+
+    <section class="why-us why-us-container">
+        <div class="container">
+            <h2 class="mt-5 text-center">Connectez Vous</h2>
+            <br>
+            <br>
+            <form method="POST" autocomplete="off">
+
+                                    {% if form.errors %}
+                            {% for field in form %}
+                                {% for error in field.errors %}
+                                    <div class="alert alert-danger text-center">
+                                        <strong>{{ error|escape }}</strong>
+                                    </div>
+                                {% endfor %}
+                            {% endfor %}
+
+                            {% for error in form.non_field_errors %}
+                                <div class="alert alert-danger text-center">
+                                    <strong>{{ error|escape }}</strong>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                        
+                {% csrf_token %}
+
+                <div class="input-container">
+                    <i class="fa fa-user icon input-icon" data-id="0"></i>
+                    {% render_field form.password class+="form-control large-input my-input input-focus" placeholder="Mot de passe" data-id="0"  %}
+                </div>
+
+                <button class="btn btn-info btn-block" type="submit">Connexion</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/places.js@1.19.0"></script>
+    <script src="{% static "main/js/jquery.min.js" %}"></script> <!-- jQuery for Bootstrap's JavaScript plugins -->
+    <script src="{% static "main/js/moment.js" %}"></script> <!-- time scripts -->
+    <script src="{% static "main/js/bootstrap.min.js" %}"></script> <!-- Bootstrap framework -->
+    <script src="{% static "main/js/bootstrap-datetimepicker.js" %}"></script>
+    <script src="{% static "main/js/popper.min.js" %}"></script> <!-- Popper tooltip library for Bootstrap -->
+    <script src="{% static "main/js/jquery.easing.min.js" %}"></script> <!-- jQuery Easing for smooth scrolling between anchors -->
+    <script src="{% static "main/js/jquery.magnific-popup.js" %}"></script> <!-- Magnific Popup for lightboxes -->
+    <script src="{% static "main/js/validator.min.js" %}"></script> <!-- Validator.js - Bootstrap plugin that validates forms -->
+    <script src="{% static "main/js/scripts.js" %}"></script> <!-- Custom scripts -->
+    <script src="{% static "main/js/main.js" %}"></script> <!-- Custom scripts -->
+    <script src="{% static "main/js/moment.js" %}"></script> <!-- time scripts -->
+
+
+</body>
+
+</html>

@@ -1,0 +1,199 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <meta name="author" content="Yannis Alouache">
+
+    <!-- Website Title -->
+    <title>Race View</title>
+
+    <!-- Styles -->
+    <link href="https://fonts.googleapis.com/css?family=Raleway:400,400i,600,700,700i&amp;subset=latin-ext"
+        rel="stylesheet">
+    <link href="{% static "main/css/bootstrap.css" %}" rel="stylesheet">
+    <link href="{% static "main/css/bootstrap-datetimepicker.css" %}" rel="stylesheet">
+    <link href="{% static "main/css/fontawesome-all.css" %}" rel="stylesheet">
+    <link href="{% static "main/css/magnific-popup.css" %}" rel="stylesheet">
+    <link href="{% static "main/css/styles.css" %}" rel="stylesheet">
+
+    <!-- Favicon  -->
+    <link rel="icon" href="{% static "main/images/favicon-16x16.png" %}">
+</head>
+
+<body data-spy="scroll" data-target=".fixed-top">
+
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom fixed-top">
+        <div class="container">
+            <!-- Image Logo -->
+            <a class="navbar-brand logo-image" href="#"><img src="{% static "main/images/logo.png" %}"
+                    class="width-auto" alt="alternative"></a>
+
+            <div class="ml-auto">
+                <a href="{% url 'logout' %}">Déconnexion</a>
+            </div>
+        </div>
+    </nav> <!-- end of navbar -->
+
+
+    <section class="why-us why-us-container">
+        <div class="container">
+            <h2 class="mt-5 text-center">Les Courses</h2>
+            <br>
+            <br>
+            <div id="raceContainer">
+                {% for race in races %}
+                <div class="row">
+                    {% if forloop.counter > 9 %}
+                    <div class="col-sm-6 col-xl-12 center">
+                        <div class="box-race" data-id="{{forloop.counter}}">
+                            <button type="button" style="border-radius: 50%;background-color: #00bfd8;"
+                                data-id={{race.id}} onclick="removeRace({{race.id}})" class="close close-btn" aria-label="Close">
+                                <div aria-hidden="true">&times;</div>
+                            </button>
+                            <span>{{forloop.counter}}</span>
+                            <h4>{{race.name}}</h4>
+                            <h5>Téléphone : <strong>{{race.phone}}</strong> </h5>
+                            <h5>Date : <strong>{{race.date}}</strong></h5>
+                            <h5>Départ : <strong>{{race.addressDeparture}}</strong></h5>
+                            <h5>Arrivé : <strong>{{race.addressArrival}}</strong></h5>
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="col-sm-6 col-xl-12 center">
+                        <div class="box-race" data-id="{{forloop.counter}}">
+                            <button type="button" style="border-radius: 50%;background-color: #00bfd8;"
+                                data-id={{race.id}} onclick="removeRace({{race.id}})" class="close close-btn" aria-label="Close">
+                                <div aria-hidden="true">&times;</div>
+                            </button>
+                            <span>0{{forloop.counter}}</span>
+                            <h4>{{race.name}}</h4>
+                            <h5>Téléphone : <strong>{{race.phone}}</strong> </h5>
+                            <h5>Date : <strong>{{race.date}}</strong></h5>
+                            <h5>Départ : <strong>{{race.addressDeparture}}</strong></h5>
+                            <h5>Arrivé : <strong>{{race.addressArrival}}</strong></h5>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+                {% empty %}
+                <div class="alert alert-danger text-center">
+                    <strong>Vous n'avez aucune courses disponible</strong>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+
+    </section>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/places.js@1.19.0"></script>
+    <script src="{% static "main/js/jquery.min.js" %}"></script> <!-- jQuery for Bootstrap's JavaScript plugins -->
+    <script src="{% static "main/js/moment.js" %}"></script> <!-- time scripts -->
+    <script src="{% static "main/js/bootstrap.min.js" %}"></script> <!-- Bootstrap framework -->
+    <script src="{% static "main/js/bootstrap-datetimepicker.js" %}"></script>
+    <script src="{% static "main/js/popper.min.js" %}"></script> <!-- Popper tooltip library for Bootstrap -->
+    <script src="{% static "main/js/jquery.easing.min.js" %}"></script>
+    <!-- jQuery Easing for smooth scrolling between anchors -->
+    <script src="{% static "main/js/jquery.magnific-popup.js" %}"></script> <!-- Magnific Popup for lightboxes -->
+    <script src="{% static "main/js/validator.min.js" %}"></script>
+    <!-- Validator.js - Bootstrap plugin that validates forms -->
+    <script src="{% static "main/js/scripts.js" %}"></script> <!-- Custom scripts -->
+    <script src="{% static "main/js/moment.js" %}"></script> <!-- time scripts -->
+
+
+    <script>
+
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function () {
+            navigator.serviceWorker.register('sw.js/').then(function (registration) {
+                // Registration was successful registration successful with scope: ', registration.scope);
+            }, function (err) {
+                // registration failed :(
+                console.log('ServiceWorker registration failed: ', err);
+            });
+        });
+    }
+    
+    </script>
+
+    <script>
+        function getToken(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = cookies[i].trim();
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        var csrftoken = getToken('csrftoken');
+    </script>
+
+
+    <script>
+        setInterval(function () {
+            $( "#raceContainer" ).load(window.location.href + " #raceContainer > *" );
+        }, 10000);
+    </script>
+
+
+<script>
+
+    $(document).ready(function () {
+        
+        if (!("raceCount" in sessionStorage)){
+            sessionStorage.setItem('raceCount', 0);            
+        }
+
+        let raceCount = parseInt(sessionStorage.getItem("raceCount"), 10)
+        let race = document.getElementsByClassName("box-race")
+
+        setInterval(function () {
+        
+            if (race.length > raceCount) {
+                raceCount++;
+                sessionStorage.setItem('raceCount', raceCount);      
+
+                Notification.requestPermission(function (permission) {
+            // If the user accepts, let's create a notification
+                if (permission === "granted") {
+                    navigator.serviceWorker.getRegistrations().then(registration => {
+                        registration[0].showNotification('Nouvelle Course', {
+                            body: "Vous avez une nouvelle Course",
+                            icon: '{% static "main/images/car.png" %}',
+                            badge: '{% static "main/images/badge.png" %}',
+                            requireInteraction: true,
+                        });
+                    });
+                }
+            });
+
+            }
+
+            if (race.length < raceCount) {
+                raceCount--;
+                sessionStorage.setItem('raceCount', raceCount);      
+            }
+
+        }, 10000);
+    });
+</script>
+
+<script src="{% static "main/js/removeRace.js" %}"></script>
+
+</body>
+
+</html>
